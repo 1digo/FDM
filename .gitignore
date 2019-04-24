@@ -1,0 +1,9 @@
+*.py[cow]
+.idea
+.vscode/
+.env
+config.ini
+var/
+venv/
+logs/
+celerybeat.pid

@@ -1,0 +1,7 @@
+Django
+psycopg2
+python-decouple
+django-split-settings
+djangorestframework
+gevent
+gunicorn

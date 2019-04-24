@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+  nginx:
+    image: nginx:latest
+    expose:
+      - 80
+    ports:
+      - "80:80"
+    volumes:
+      - ./var/static:/srv/FDM/var/static
+      - ./var/media:/srv/FDM/var/media
+      - ./logs:/srv/FDM/logs
+      - ./nginx:/etc/nginx/conf.d
+    depends_on:
+      - web
+
+  postgres:
+    image: postgres
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./tmp:/tmp
+    environment:
+      POSTGRES_DB: ${POSTGRES_NAME}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+  web:
+    build: .
+    volumes:
+      - .:/srv/FDM
+    expose:
+      - 8000
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+    command: "gunicorn -c gunicorn.py fdm.wsgi"
+
+volumes:
+  db_data:
