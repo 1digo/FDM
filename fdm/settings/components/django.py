@@ -102,8 +102,10 @@ USE_L10N = True
 
 USE_TZ = True
 
+ANGULAR_APP_DIR = PROJECT_ROOT / 'angular' / 'dist' / 'fdm-fe'
+
 STATICFILES_DIRS = [
-    BASE_DIR / 'static',
+    ('frontend', ANGULAR_APP_DIR),
 ]
 
 STATIC_URL = '/static/'

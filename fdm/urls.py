@@ -14,12 +14,17 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.contrib.staticfiles.views import serve
 from django.urls import path, re_path, include
+from django.views.generic import RedirectView
 
 from fdm.apps.api.v1.routes import api_router
 
 
 urlpatterns = [
+    re_path(r'^$', serve,kwargs={'path': 'frontend/index.html'}),
+    re_path(r'^(?!/?static/)(?!/?media/)(?P<path>.*\..*)$',
+        RedirectView.as_view(url='/static/frontend/%(path)s', permanent=False)),
     path('admin/', admin.site.urls),
     re_path(r'^api/v1/', include(api_router.urls)),
 ]

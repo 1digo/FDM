@@ -2,6 +2,7 @@ version: '3'
 
 services:
   nginx:
+    restart: always
     image: nginx:latest
     expose:
       - 80
@@ -25,16 +26,21 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
   web:
+    restart: always
     build: .
     volumes:
       - .:/srv/FDM
+      - ../fdm-fe:/srv/FDM/angular
     expose:
       - 8000
     ports:
       - "8000:8000"
     depends_on:
       - postgres
-    command: "gunicorn -c gunicorn.py fdm.wsgi"
+    command: >
+      bash -c "python manage.py migrate
+      && python manage.py collectstatic --no-input
+      && gunicorn -c gunicorn.py fdm.wsgi"
 
 volumes:
   db_data:
