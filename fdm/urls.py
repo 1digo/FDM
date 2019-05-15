@@ -17,14 +17,26 @@ from django.contrib import admin
 from django.contrib.staticfiles.views import serve
 from django.urls import path, re_path, include
 from django.views.generic import RedirectView
+from rest_framework.routers import SimpleRouter
 
-from fdm.apps.api.v1.routes import api_router
+from fdm.apps.accounts.api.v1.viewsets import AccountViewSet
+
+
+api_v1_router = SimpleRouter()
+api_v1_router.register('users', AccountViewSet)
+
+api_v1_urlpatterns = [
+    path('v1/auth/', include('rest_auth.urls')),
+    path('v1/', include((api_v1_router.urls, 'v1'), namespace='v1')),
+]
+
 
 
 urlpatterns = [
-    re_path(r'^$', serve,kwargs={'path': 'frontend/index.html'}),
-    re_path(r'^(?!/?static/)(?!/?media/)(?P<path>.*\..*)$',
-        RedirectView.as_view(url='/static/frontend/%(path)s', permanent=False)),
+    path('', serve, kwargs={'path': 'frontend/index.html'}),
+    re_path('^(?!/?static/)(?!/?media/)(?P<path>.*\..*)$',
+            RedirectView.as_view(url='/static/frontend/%(path)s', permanent=False)),
     path('admin/', admin.site.urls),
-    re_path(r'^api/v1/', include(api_router.urls)),
+    path('api/', include((api_v1_urlpatterns, 'api_v1'), namespace='api')),
+    path('api-auth/', include('rest_framework.urls')),
 ]

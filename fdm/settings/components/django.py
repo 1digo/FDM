@@ -9,7 +9,7 @@ BASE_DIR = Path(__file__).parents[1]
 
 sys.path.append(str(BASE_DIR / 'apps'))
 
-SECRET_KEY = "2l^jabwn7sd1adr5=&c_3)t-=_*$-gywn_l(mn^+=l(k!t*)(o"
+SECRET_KEY = config('SECRET_KEY')
 
 DEBUG = config('DEBUG', cast=bool, default=False)
 
@@ -25,6 +25,8 @@ INSTALLED_APPS = [
 
     # third-party apps
     'rest_framework',
+    'rest_framework_jwt',
+    'rest_auth',
 
     # custom apps
     'fdm.apps.accounts',

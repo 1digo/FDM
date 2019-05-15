@@ -5,3 +5,5 @@ django-split-settings
 djangorestframework
 gevent
 gunicorn
+djangorestframework-jwt
+django-rest-auth
